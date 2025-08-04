@@ -24,12 +24,12 @@ function validate(validatableInput: Validatable){
     let isValid = true;
 
     if (validatableInput.required){
-        isValid = isValid && validatableInput.value.toString().trim.length !== 0;
+        isValid = isValid && validatableInput.value.toString().trim().length !== 0;
     }
-    if (validatableInput.minLength != null && validatableInput.value === 'string'){
+    if (validatableInput.minLength != null && typeof validatableInput.value === 'string'){
         isValid = isValid && validatableInput.value.length > validatableInput.minLength;
     }
-    if (validatableInput.maxLength != null && validatableInput.value === 'string'){
+    if (validatableInput.maxLength != null && typeof validatableInput.value === 'string'){
         isValid = isValid && validatableInput.value.length < validatableInput.maxLength;
     }
     if (validatableInput.min != null && typeof validatableInput.value === 'number'){
@@ -41,8 +41,39 @@ function validate(validatableInput: Validatable){
     return isValid;
 }
 
+//Project List Class
+class ProjectList{
+    templateElement: HTMLTemplateElement;
+    hostElement: HTMLDivElement;
+    element: HTMLElement;
+
+    constructor(private type: 'active' | 'finished') {
+        this.templateElement = document.getElementById('project-list')! as HTMLTemplateElement;
+        this.hostElement = document.getElementById('app')! as HTMLDivElement;
+
+        const importedNode = document.importNode(this.templateElement.content, true); //retirar o conteudo do elemento
+        this.element = importedNode.firstElementChild as HTMLElement;
+        this.element.id = `${this.type}-projects`;
+
+        this.attach();
+        this.renderContent();
+    }
+
+    private attach() {
+        this.hostElement.insertAdjacentElement('beforeend', this.element);
+    }
+
+    private renderContent() {
+        const listId = `${this.type}-projects-list`;
+        this.element.querySelector('ul')!.id = listId;
+        this.element.querySelector('h2')!.textContent = this.type.toUpperCase() + ' PROJECTS';
+    }
+}
 
 
+
+
+//Project Input Class
 class ProjectInput{
     templateElement: HTMLTemplateElement;
     hostElement: HTMLDivElement; //onde quero dar render ao conteudo
@@ -129,3 +160,5 @@ class ProjectInput{
 }
 
 const prjInput = new ProjectInput();
+const activeProjectList =  new ProjectList('active');
+const finishedProjectList =  new ProjectList('finished');
