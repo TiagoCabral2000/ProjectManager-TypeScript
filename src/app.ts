@@ -295,8 +295,8 @@ class ProjectInput extends Component<HTMLDivElement, HTMLFormElement>{
         const peopleValidatable: Validatable = {
             value: +enteredPeople,
             required: true,
-            min: 1,
-            max: 5
+            min: 0,
+            max: 11
         };
 
 
